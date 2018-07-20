@@ -1,0 +1,360 @@
+{$MODE DELPHI}
+program Animation;
+uses
+  sysutils,crt;
+Const MaxShape=1024;
+Type
+ TShapeStyle = (STCone, stcylinder, stcube, stplane, stsphere,
+    stcapsule,stdisk,stannulus,starowArc,starowline,
+    stpolygon,stmultipolygon,strevolutonsolid,sttorus,stflatext,stxyzgrid,
+    stspacetext,stteapot,sttree,stwaterplane,stactor,stfreeform,
+    stdodecahedron,sticosaheron,stoctaheron,stfrustrum,stlight,stcamera);
+
+
+Type TLightStyle=(CustomLsspot,CustomlsLsomni,CustomlsLsparallel);
+Type Tposition=record
+  X:Real;
+  Y:Real;
+  Z:Real;
+end;
+Type TDirection=record
+  X:Real;
+  Y:Real;
+  Z:Real;
+end;
+Type TScale=record
+  X:Real;
+  Y:Real;
+  Z:Real;
+end;
+Type TTexture=record
+  adr:string[255];
+  Disable:Boolean;
+  Brightness:Single;
+  Procedure Load(ADR: String);
+end;
+Type Tnode=record
+    x,y,z:real;
+end;
+Type TNodes=record
+   nodes: array [1..100] of Tnode;
+   Count: integer;
+   procedure Addnode(x,y,z:real);
+end;
+Type TAnimationMode=(TBounceBackWard,TBounceForward,TExternal,TLoop,
+  TLoopBackWard,tnone,TPlayOne);
+
+
+Type TShape=record
+  Name:string[255];
+  Style: TShapeStyle;
+  Expression:String[255];
+  Position:Tposition;
+  Nodes: Tnodes;
+  Color:Integer;
+  Depth,Width,Height:Real;
+  TopRadius,BottomRadius,Radius:Real;
+  Direction: TDirection;
+  Scale: TScale;
+  TurnAngle:Real;
+  RollAngle:Real;
+  PitchAngle:real;
+  Texture:TTexture;
+  Showaxes:Boolean;
+  Visible:Boolean;
+  Shining:Boolean;
+  LightStyle: TLightStyle;
+  LightColor:Longint;
+  FocalLength:Real;
+  DepthOfView:Real;
+  Slice:Integer;
+  AnimationMode: TAnimationMode;
+  Animation: string[200];
+  SmoothAni:boolean;
+  ActorFile:string[200];
+  Procedure Translate(tx,ty,tz:real);
+  Procedure Moveto(wx,wy,wz:real);
+  Procedure TranslateRender(tx,ty,tz:real;Time:integer);
+  Procedure MoveToRender(wx,wy,wz:real;time:integer);
+  Procedure SwitchToAnimation(NameAni: string;Smooth:boolean);
+  Procedure LoadActorFromFile(ADR:STRING);
+end;
+Var Shape:Array[0..MaxShape] of TShape;
+    input:File of Tshape;
+    count,countbackup,k:integer;
+    shapebackup:array[0..maxshape] of TShape;
+    Anifile:text;
+    target:string;
+    vsettarget:boolean=false;
+
+
+
+Procedure Render(timedelay:integer);forward;
+Function Indexof(spname:string):integer;forward;
+Procedure settarget(ten:string);
+ begin
+  vsettarget:=true;
+  target:=ten;
+ end;
+ Procedure TShape.SwitchToAnimation(NameAni: string;Smooth:boolean);
+ begin
+   self.animation:= nameani;
+   self.smoothani:=smooth;
+ end;
+ Procedure TShape.LoadActorFromFile(ADR:STRING);
+ begin
+   Self.actorfile:=adr;
+ end;
+Procedure TTexture.load(adr:string);
+begin
+ self.adr:=adr;
+end;
+Function RandomColor: Byte;
+var r,g,b:integer;
+Begin
+ r := Random(256);
+            g := Random(256);
+            b := Random(256);
+
+            { draw color [r,g,b] at position [x,y] }
+ result:= (r shl 16) + (g shl 8) + b;
+
+
+end;
+Function checkName(s: string):boolean;
+var i:integer;
+begin
+result:=true;
+for i:=0 to count-1 do
+if shape[i].name=s then result:=false;
+end;
+Procedure AddShape(NameSP:String;Style:TShapeStyle);
+Begin
+if not checkName(namesp) then exit;
+inc(count);
+Shape[count-1].name:=NameSP;
+Shape[count-1].style:= style;
+shape[count-1].nodes.count:=0;
+with shape[count-1] do
+ begin
+  position.x:=0;
+  position.y:=0;
+  position.z:=0;
+  scale.x:=0;
+  scale.y:=0;
+  scale.z:=0;
+  rollangle:=0;
+  pitchangle:=0;
+  turnangle:=0;
+  color:=randomcolor;
+  Animation:='';
+  animationmode:= TNone;
+  Actorfile:='';
+  smoothani:=true;
+ end;
+//writeln(shape[count-1].name);
+//readln;
+end;
+procedure TNodes.Addnode(x: Real; y: Real; z: Real);
+begin
+  self.Count:=self.Count+1;
+  nodes[Count-1].x:=x;
+  nodes[Count-1].y:=y;
+  nodes[Count-1].z:=z;
+end;
+
+Procedure Tshape.moveToRender(wx,wy,wz:real;time:integer);
+begin
+ self.translateRender(wx-self.position.x,wy-self.position.y,wz-self.position.z,time);
+end;
+Procedure Tshape.translateRender(tx,ty,tz:real;Time:integer);
+Var StepX,Stepy,Stepz:real;
+    TimeIndex:Integer;
+Begin
+timeindex:=0;
+ stepx:=tx/time;
+ stepy:=ty/time;
+ stepz:=tz/time;
+ repeat
+ inc(timeindex);
+  self.position.x:=self.position.x+stepx;
+  self.position.y:=self.position.y+stepy;
+  self.position.z:=self.position.z+stepz;
+  Render(1);
+ until timeindex=time;
+end;
+
+Procedure tshape.translate(tx,ty,tz:real);
+begin
+ self.position.x:=self.position.x+tx;
+ self.position.y:=self.position.y+ty;
+ self.position.z:=self.position.z+tz;
+end;
+Procedure Tshape.Moveto(wx,wy,wz:real);
+begin
+ self.position.x:=wx;
+ self.position.y:=wy;
+ self.position.z:=wz;
+end;
+Procedure sendcommand(cmd:string);
+Begin
+ Writeln(Anifile,cmd);
+End;
+Procedure Process;
+//code here
+
+
+
+Function indexof(spname:string):integer;
+var spindex:integer;
+begin
+ for spindex:=0 to count-1 do
+  begin
+   if lowercase(shape[spindex].name)=lowercase(spname) then
+    begin
+     result:=spindex;
+     exit;
+    end;
+  end;
+end;
+
+Procedure backupdata;
+var i:integer;
+begin
+ for i:=0 to count-1 do
+  shapebackup[i]:=shape[i];
+  countbackup:=count;
+end;
+
+Procedure Render(Timedelay:integer);
+var i,j:integer;
+Begin
+ sendcommand('sleep='+inttostr(Timedelay));
+ If count>countBackup then
+  begin
+   For i:= countBackup To count-1 do
+    begin
+     Sendcommand('add='+Shape[i].name+'_'+inttostr(ord(Shape[i].style)));
+  // writeln(shape[i].name);
+  //  readln;
+    end;
+  end;
+  if vsettarget then
+   begin
+        sendcommand('target='+target);
+        vsettarget:=false;
+   end;
+ for i:=0 to count-1 do
+  with shape[i] do
+   begin
+    if shape[i].nodes.count<> shapebackup[i].nodes.count then
+     begin
+      sendcommand(shape[i].name+'.nodes.count='+inttostr(shape[i].nodes.count));
+      for j:=shapebackup[i].nodes.count to shape[i].nodes.count-1 do
+       begin
+           sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].x=' +floattostr(shape[i].nodes.nodes[j].x));
+           sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].y=' +floattostr(shape[i].nodes.nodes[j].y));
+           sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].z=' +floattostr(shape[i].nodes.nodes[j].z));
+       end;
+     end;
+     for j:=0 to shape[i].nodes.count-1 do
+      begin
+       if shape[i].nodes.nodes[j].x<> shapeBackup[i].nodes.nodes[j].x then
+       sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].x='+floattostr(shape[i].nodes.nodes[j].x))
+       else   if shape[i].nodes.nodes[j].y<> shapeBackup[i].nodes.nodes[j].y then
+       sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].y='+floattostr(shape[i].nodes.nodes[j].y))
+       else   if shape[i].nodes.nodes[j].z<> shapeBackup[i].nodes.nodes[j].z then
+       sendcommand(shape[i].name+'.nodes.nodes['+inttostr(j)+'].z='+floattostr(shape[i].nodes.nodes[j].z));
+      end;
+     if shape[i].position.x<>shapebackup[i].position.x then
+      sendcommand(lowercase(shape[i].name)+'.position.x'+'='+floattostr(shape[i].position.x));
+     if position.y<>shapebackup[i].position.y then
+      sendcommand(lowercase(shape[i].name)+'.position.y'+'='+floattostr(shape[i].position.y));
+   // if color <>shapebackup[i].color then
+  //  sendcommand(lowercase(shape[i].name+'.color='+inttostr(shape[i].color)));
+    if position.z<>shapebackup[i].position.z then
+      sendcommand(lowercase(shape[i].name)+'.position.z'+'='+floattostr(shape[i].position.z)) ;
+            if direction.x<>shapebackup[i].direction.x
+            then sendcommand(lowercase(shape[i].name)+'.direction.x'+'='+floattostr(shape[i].direction.x))  ;
+             if direction.y<>shapebackup[i].direction.y
+            then sendcommand(lowercase(shape[i].name)+'.direction.y'+'='+floattostr(shape[i].direction.y));
+            if direction.z<>shapebackup[i].direction.z
+            then sendcommand(lowercase(shape[i].name)+'.direction.z'+'='+floattostr(shape[i].direction.z));
+            //scale
+            if scale.x<>shapebackup[i].scale.x then
+            sendcommand(lowercase(shape[i].name)+'.scale.x'+'='+floattostr(shape[i].scale.x));
+            if scale.x<>shapebackup[i].scale.y then
+            sendcommand(lowercase(shape[i].name)+'.scale.y'+'='+floattostr(shape[i].scale.y));
+              if scale.y<>shapebackup[i].scale.x then
+            sendcommand(lowercase(shape[i].name)+'.scale.z'+'='+floattostr(shape[i].scale.z));
+            //Rotate angle
+            If turnangle<>shapebackup[i].turnangle then
+            sendcommand(lowercase(shape[i].name)+'.turnangle'+'=' +floattostr(shape[i].turnangle));
+            If rollangle<>shapebackup[i].rollangle then
+            sendcommand(lowercase(shape[i].name)+'.rollangle'+'=' +floattostr(shape[i].rollangle));
+            If turnangle<>shapebackup[i].turnangle then
+            sendcommand(lowercase(shape[i].name)+'.turnangle'+'=' +floattostr(shape[i].turnangle));
+            If pitchangle<>shapebackup[i].pitchangle then
+            sendcommand(lowercase(shape[i].name)+'.pitchangle'+'=' +floattostr(shape[i].pitchangle));
+            if visible<>shapebackup[i].visible then
+            sendcommand(lowercase(shape[i].name)+'.pitchangle'+'=' + lowercase(booltostr(visible)));
+            if texture.disable<>shapebackup[i].texture.disable then
+            sendcommand(lowercase(shape[i].name)+'.texture.disable'+'='+lowercase(booltostr(texture.disable)));
+            if texture.adr<>shapebackup[i].texture.Adr then
+            sendcommand(lowercase(shape[i].name)+'.texture.adres'+'=' +lowercase(texture.adr));
+            if texture.brightness<>shapebackup[i].texture.brightness then
+            sendcommand(lowercase(shape[i].name)+'.texture.brightness'+'='+floattostr(texture.brightness));
+            if radius<>shapebackup[i].radius then
+            sendcommand(lowercase(shape[i].name)+'.radius'+'='+floattostr(radius));
+            if showaxes <>shapebackup[i].showaxes then
+            sendcommand(lowercase(shape[i].name)+'.showaxes'+'=' +lowercase(booltostr(showaxes)));
+            if shining<>shapebackup[i].shining then
+            sendcommand(lowercase(shape[i].name)+'.shining'+'=' +lowercase(booltostr(shining)));
+            if topradius<>shapebackup[i].topradius then
+            sendcommand(lowercase(shape[i].name)+'.topradius'+'='+floattostr(topradius));
+            if bottomradius<>shapebackup[i].bottomradius then
+            sendcommand(lowercase(shape[i].name)+'.bottomradius'+'='+floattostr(bottomradius));
+            if slice<>shapebackup[i].slice then
+            sendcommand(lowercase(shape[i].name)+'.slice'+'='+floattostr(slice));
+            If animationmode <>shapebackup[i].animationmode then
+            sendcommand(lowercase(shape[i].name)+'.animationmode='+inttostr(ord(shape[i].animationMode)));
+            if animation<> shapebackup[i].animation then
+            sendcommand(lowercase(shape[i].name)+'.animation='+animation);
+            if Smoothani<>shapebackup[i].smoothAni then
+            sendcommand(lowercase(shape[i].name)+'.smoothani=' +booltostr(smoothani));
+            if actorfile<>shapebackup[i].actorfile then
+            sendcommand(lowercase(shape[i].name)+'.actorfile='+actorfile);
+     end;
+  for i:=0 to count-1 do
+     shapebackup[i]:=shape[i];
+     countbackup:=count;
+// backupdata;
+end;
+procedure loaddata;
+Begin
+         count:=0;
+         Assign(input,'input.txt');
+         reset(input);
+         While not eof(input) do
+
+         Begin
+                        inc(count);
+                        Read(input,shape[count-1]);
+
+                End;
+        // count:=count-1;
+         Closefile(input);
+End;
+// Than chuong trinh
+begin
+  clrscr;
+  writeln('Loading...');
+  loaddata;
+ writeln('backupting...');
+  backupdata;
+ assign(Anifile,'c:\FPC\3DAnimation\Ani.txt');
+ rewrite(anifile);
+         process;
+ Close(Anifile);
+    writeln('finish');
+End.

@@ -1,0 +1,20 @@
+program Animation;
+
+uses
+  Forms,
+  UMain in 'UMain.pas' {Fmain},
+  umessage in 'umessage.pas' {fmsg},
+  u_loadDatatoMesh in 'u_loadDatatoMesh.pas' {frm_loadMesh},
+  u_pro in 'u_pro.pas' {Form2};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFmain, Fmain);
+  Application.CreateForm(Tfmsg, fmsg);
+  Application.CreateForm(Tfrm_loadMesh, frm_loadMesh);
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

@@ -1,0 +1,25 @@
+unit umessage;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  Tmm_msg = class(TForm)
+    Memo1: TMemo;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  mm_msg: Tmm_msg;
+
+implementation
+
+{$R *.dfm}
+
+end.

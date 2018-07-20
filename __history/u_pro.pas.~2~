@@ -1,0 +1,24 @@
+unit u_pro;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type
+  Tfrm_pro = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_pro: Tfrm_pro;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,16 @@
+program Animation;
+
+uses
+  Forms,
+  UMain in 'UMain.pas' {Fmain},
+  umessage in 'umessage.pas' {mm_msg};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFmain, Fmain);
+  Application.CreateForm(Tmm_msg, mm_msg);
+  Application.Run;
+end.

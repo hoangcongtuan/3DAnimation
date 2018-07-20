@@ -1,0 +1,25 @@
+	Thread ID 2280	0	 (i)  Log subsystem started in elapsed time mode.
+	Thread ID 2280	0	 (i)  Logging [debug info (D), info (i), notices (M), warnings (W), errors (Er), fatal errors (!!)]
+	Thread ID 2280	0	 (i)  Buffered mode: False
+	Thread ID 2280	0	 (M)  Service thread started
+	Thread ID 2280	187	 (i)  Temporary rendering context created
+	Thread ID 2280	187	 (M)  Getting OpenGL entry points and extension
+	Thread ID 2280	187	 (M)  
+	Thread ID 2280	187	 (i)  OpenGL rendering context information:
+	Thread ID 2280	187	 (i)  Renderer     : AMD Radeon R7 200 Series
+	Thread ID 2280	187	 (i)  Vendor       : ATI Technologies Inc.
+	Thread ID 2280	187	 (i)  Version      : 4.4.13283 Compatibility Profile Context 14.501.1003.0
+	Thread ID 2280	187	 (i)  GLSL version : 4.40
+	Thread ID 2280	187	 (M)  
+	Thread ID 2280	203	 (M)  Getting OpenGL entry points and extension
+	Thread ID 2280	218	 (i)  Backward compatible core PBuffer context successfully created
+	Thread ID 2280	218	 (M)  Service context successfuly initialized
+	Thread ID 1416	265	 (i)  Temporary rendering context created
+	Thread ID 1416	265	 (M)  Getting OpenGL entry points and extension
+	Thread ID 1416	265	 (i)  Temporary rendering context destroyed
+	Thread ID 1416	281	 (M)  Getting OpenGL entry points and extension
+	Thread ID 1416	30217	 (i)  Service context queue task depleted
+	Thread ID 2280	35054	 (M)  Service thread finished
+	Thread ID 1416	35054	 (D)  Service thread destroyed
+	Thread ID 1416	35054	 (i)  Logged fatal_errors: 0, errors: 0, warnings: 0, notices: 9, info: 13, debug: 1
+	Thread ID 1416	35054	 (i)  Log session shutdown

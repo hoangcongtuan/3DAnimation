@@ -1,0 +1,41 @@
+unit u_loadDatatoMesh;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtCtrls;
+
+type
+  Tfrm_loadMesh = class(TForm)
+    edt_Name: TLabeledEdit;
+    edt_skin: TLabeledEdit;
+    edt_md2: TLabeledEdit;
+    EDT_ani: TLabeledEdit;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_loadMesh: Tfrm_loadMesh;
+  index: integer;
+
+implementation
+
+uses UMain;
+
+{$R *.dfm}
+
+procedure Tfrm_loadMesh.FormShow(Sender: TObject);
+begin
+   edt_Name.Text:= UMain.pickobj.Name;
+end;
+
+end.

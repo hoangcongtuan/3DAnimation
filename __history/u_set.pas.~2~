@@ -1,0 +1,43 @@
+unit u_set;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtCtrls;
+
+type
+  Tfrm_set = class(TForm)
+    GroupBox1: TGroupBox;
+    cl_scene: TColorBox;
+    BitBtn1: TBitBtn;
+    ColorDialog1: TColorDialog;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_set: Tfrm_set;
+
+implementation
+
+uses UMain;
+
+{$R *.dfm}
+
+procedure Tfrm_set.BitBtn1Click(Sender: TObject);
+begin
+if ColorDialog1.Execute then
+   cl_scene.Selected:= ColorDialog1.Color;
+end;
+
+procedure Tfrm_set.FormShow(Sender: TObject);
+begin
+cl_scene.Selected:= fmain.Scene.Buffer.BackgroundColor;
+end;
+
+end.

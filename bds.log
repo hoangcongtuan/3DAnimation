@@ -1,0 +1,28 @@
+	Thread ID 3788	0	 (i)  Log subsystem started in elapsed time mode.
+	Thread ID 3788	0	 (i)  Logging [debug info (D), info (i), notices (M), warnings (W), errors (Er), fatal errors (!!)]
+	Thread ID 3788	0	 (i)  Buffered mode: False
+	Thread ID 3788	0	 (i)  Temporary rendering context created
+	Thread ID 3788	0	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	0	 (M)  
+	Thread ID 3788	0	 (i)  OpenGL rendering context information:
+	Thread ID 3788	0	 (i)  Renderer     : AMD Radeon R7 200 Series
+	Thread ID 3788	0	 (i)  Vendor       : ATI Technologies Inc.
+	Thread ID 3788	0	 (i)  Version      : 4.4.13283 Compatibility Profile Context 14.501.1003.0
+	Thread ID 3788	0	 (i)  GLSL version : 4.40
+	Thread ID 3788	0	 (M)  
+	Thread ID 3788	15	 (i)  Temporary rendering context destroyed
+	Thread ID 3788	31	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	218	 (i)  Temporary rendering context created
+	Thread ID 3788	218	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	234	 (i)  Temporary rendering context destroyed
+	Thread ID 3788	249	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	3338	 (i)  Temporary rendering context created
+	Thread ID 3788	3338	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	3338	 (i)  Temporary rendering context destroyed
+	Thread ID 3788	3369	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	4805	 (i)  Temporary rendering context created
+	Thread ID 3788	4805	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	4805	 (i)  Temporary rendering context destroyed
+	Thread ID 3788	4820	 (M)  Getting OpenGL entry points and extension
+	Thread ID 3788	725248	 (i)  Logged fatal_errors: 0, errors: 0, warnings: 0, notices: 10, info: 16, debug: 0
+	Thread ID 3788	725248	 (i)  Log session shutdown

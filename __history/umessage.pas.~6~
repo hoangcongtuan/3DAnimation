@@ -1,0 +1,26 @@
+unit umessage;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons;
+
+type
+  Tfmsg = class(TForm)
+    mm_msg: TMemo;
+    SpeedButton1: TSpeedButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmsg: Tfmsg;
+
+implementation
+
+{$R *.dfm}
+
+end.

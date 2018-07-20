@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{FEBF4EBF-69AA-4F92-AD11-D9FC1DF21686}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="Animation.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="..\Physic ems\Physic.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="Animation">
+			<MSBuild Projects="Animation.dproj"/>
+		</Target>
+		<Target Name="Animation:Clean">
+			<MSBuild Targets="Clean" Projects="Animation.dproj"/>
+		</Target>
+		<Target Name="Animation:Make">
+			<MSBuild Targets="Make" Projects="Animation.dproj"/>
+		</Target>
+		<Target Name="Physic">
+			<MSBuild Projects="..\Physic ems\Physic.dproj"/>
+		</Target>
+		<Target Name="Physic:Clean">
+			<MSBuild Targets="Clean" Projects="..\Physic ems\Physic.dproj"/>
+		</Target>
+		<Target Name="Physic:Make">
+			<MSBuild Targets="Make" Projects="..\Physic ems\Physic.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="Animation;Physic"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="Animation:Clean;Physic:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="Animation:Make;Physic:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>

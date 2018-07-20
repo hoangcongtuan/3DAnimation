@@ -1,0 +1,10 @@
+Free Pascal Compiler version 2.6.4 [2014/03/06] for i386
+Copyright (c) 1993-2014 by Florian Klaempfl and others
+Target OS: Win32 for i386
+Compiling c:\FPC\3DAnimation\code.TXT
+code.TXT(55,11) Note: Local variable "countbackup" is assigned but never used
+code.TXT(55,23) Note: Local variable "k" not used
+code.TXT(58,5) Note: Local variable "ResFile" not used
+Linking c:\FPC\3DAnimation\code.exe
+238 lines compiled, 0.2 sec , 75504 bytes code, 13340 bytes data
+3 note(s) issued
